@@ -1,6 +1,10 @@
 ---
-title: "myPortfolioSite"
+title: "Connor's Portfolio"
 ---
+
+# Projects
+
+[![A breakdown on the effectiveness of the recording academy's desisionto split it's website](grammy_graph.png "Title: Grammy Analytics")](Grammys_Analytics.ipynb)
 
 This is a Quarto website.
 
