@@ -3,12 +3,13 @@ project:
   output-dir: docs
 
 website:
-  title: "myPortfolioSite"
+  title: "Connor Fair"
   navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+    right: 
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/connor-fair36/"
+      - icon: github
+        href: "https://github.com/ConnorFair36"
 
 format:
   html:

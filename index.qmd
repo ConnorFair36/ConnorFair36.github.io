@@ -1,11 +1,38 @@
 ---
-title: "Connor's Portfolio"
+title: "Connor Fair"
+listing: 
+  - id: data-analytics
+    contents: "data-analytics/*/index.qmd"
+    fields: [image, date, title, description]
+    type: grid
+image: Fair.png
+about:
+  id: the-about
+  template: trestles
+  links: 
+    - icon: linkedin
+      href: "https://www.linkedin.com/in/connor-fair36/"
+    - icon: github
+      href: "https://github.com/ConnorFair36"
 ---
 
-# Projects
+:::{#the-about}
 
-[![A breakdown on the effectiveness of the recording academy's desisionto split it's website](grammy_graph.png "Title: Grammy Analytics")](Grammys_Analytics.ipynb)
+# About Me!
 
-This is a Quarto website.
+Hey, I'm Connor! I'm a senior computer science student at VCU, with minors in math and data science. I enjoy learning about and applying machine learning models to interesting problems and experinenting with those models to see how far I can push them :). 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+In my free time, I enjoy playing bass, making chainmaile and taking my dog for walks.
+
+:::
+
+# Portfolio Projects
+
+My colection of complete projects for school or for fun
+
+## Data Analytics
+
+:::{#data-analytics}
+:::
+
+

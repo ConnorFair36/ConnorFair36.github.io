@@ -1,0 +1,527 @@
+---
+title: Grammys Project
+jupyter: python3
+date: "2024-10-1"
+image: "grammy_graph.png"
+description: "A breakdown on the effectiveness of the recording academy's desision to split its website"
+---
+
+
+Are you excited to dive into data work for an exciting project at The Recording Academy? You know, the non-profit organization behind the Grammy Awards!
+
+In this project, you'll work on real data from both websites owned by The Recording Academy, the non-profit organization behind the famous Grammy Awards. As you just learned, Ray Starck, the VP of Digital Strategy, decided to split the websites into grammy.com and recordingacademy.com to better serve the Recording Academy's various audience needs.
+
+Now, you are tasked with examining the impact of splitting up the two websites, and analyzing the data for a better understanding of trends and audience behavior on both sites.  
+
+Are you ready?!?!
+
+Let's do this!
+
+
+## Data Dictionary
+To start, you will be working with two files, `grammys_live_web_analytics.csv` and `ra_live_web_analytics.csv`.
+
+These files will contain the following information:
+
+- **date** - The date the data was confirmed. It is in `yyyy-mm-dd` format.
+- **visitors** - The number of users who went on the website on that day.
+- **pageviews** - The number of pages that all users viewed on the website.
+- **sessions** - The total number of sessions on the website. A session is a group of user interactions with your website that take place within a given time frame. For example a single session can contain multiple page views, events, social interactions.
+- **bounced_sessions** - The total number of bounced sessions on the website. A bounced session is when a visitor comes to the website and does not interact with any pages / links and leaves.
+- **avg_session_duration_secs** - The average length for all session durations for all users that came to the website that day.
+- **awards_week** - A binary flag if the dates align with marketing campaigns before and after the Grammys award ceremony was held. This is the big marketing push to get as many eyeballs watching the event.
+- **awards_night** - The actual night that the Grammy Awards event was held.
+
+# Part I - Exploratory Data Analysis
+
+![](https://media.giphy.com/media/6y6fyAD9OIE6NvhJEu/giphy.gif){width=60% height=60%}
+
+## Task 1
+
+Import the `pandas`,`numpy`, and `plotly.express` libraries.
+
+```{python}
+# Import libraries
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.io as pio
+```
+
+```{python}
+# this formats numbers to two decimal places when shown in pandas
+pd.set_option('display.float_format', lambda x: '%.2f' % x)
+
+# sets the default theme
+pio.templates.default = "ggplot2"
+```
+
+## Task 2
+
+Load in the first two files for your analysis. They are the `grammy_live_web_analytics.csv` and `ra_live_web_analytics.csv`.
+
+
+**A.** For the `grammy_live_web_analytics.csv` file store that into a dataframe called `full_df`
+
+**B.** For the `ra_live_web_analytics.csv` file store that into a dataframe called `rec_academy`
+
+**C.** Preview the dataframes to familiarize yourself with the data.
+
+All files needed can be found in the `datasets_grammys` folder.
+
+```{python}
+# Read in dataframes
+full_df = pd.read_csv('datasets_grammys/grammy_live_web_analytics.csv')
+rec_academy = pd.read_csv('datasets_grammys/ra_live_web_analytics.csv')
+```
+
+```{python}
+# preview full_df dataframe
+full_df.sample(5)
+```
+
+```{python}
+# preview rec_academy dataframe
+rec_academy.sample(5)
+```
+
+## Task 3
+
+We all know The Grammy Awards is *the* biggest music event in the music industry, but how many visitors does that bring to the website?
+
+**A.** Create a line chart of the number of users on the site for every day in the `full_df`. See if you can spot the days the Grammys awards are hosted.
+
+```{python}
+# Plot a line chart of the visitors on the site.
+px.line(data_frame=full_df,
+        x='date',
+        y='visitors',
+        title='Number of Visitors to the Grammy\'s Website Over Time')
+```
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Remark:** The smaller spikes, typically around November/December of each year, are when the nominees are announced.</span>
+
+**B.** What can you say about the visitors to the website by looking at the graph?
+
+1. The number of visitors on days that are not directly related to the awards are much lower and were slowly increasing until 2022, where they stay steady.
+2. The spike of visitors on the days the nominees are being announced is usually less than half of the number of visitors on the awards ceramony.
+3. 2019 and 2021 had the highest number of visitors on their awards days
+4. The awards ceremony in 2021 also had the highest number of visitors on the day the nominees were announced.
+5. There is an unexpected spike of visitors on Sep. 2020
+
+## Task 4
+
+Let's investigate what an "average" day looks like when the awards show is being hosted versus the other 364 days out of the year.
+
+**A.** Use the pandas `.groupby()` to calculate the number of visitors on the site based on the values in the column `awards_night`.
+
+```{python}
+full_df.groupby(by='awards_night').agg({'visitors': 'mean'})
+```
+
+**B.** What can you say about these results? Roughly how many more visitors are on the website for the awards ceremony versus a regular day?
+
+An awards night has on average around 1 million more visitors than the average of a regular day (around 43x more traffic on an awards night on average then a regular day on average)
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Remark:** This is The Recording Academy's biggest challenge! How do you transform a business that relies on the success of **one** event per year into one that continues to bring users back on the site year round?</span>
+
+## Task 5
+
+When The Recording Academy decided to split their website into two domains, grammy.com and recordingacademy.com, the data capture for grammy.com was not affected. So the `full_df` variable needs to be split separately into two dataframes. The day the domains were switched is on `2022-02-01`.
+
+Create two new dataframes:
+
+1. `combined_site` for all dates before `2022-02-01`
+2. `grammys` for all dates after (and including) `2022-02-01`
+
+```{python}
+# Split the data to separate the full_df into two new dataframes.
+# One for before the switch of the websites and one for after
+combined_site = full_df[full_df['date'] < '2022-02-01']
+grammys = full_df[full_df['date'] >= '2022-02-01']
+```
+
+```{python}
+# Run the following cell - DO NOT MODIFY
+# .copy() prevents pandas from printing a scary-looking warning message
+combined_site = combined_site.copy()
+grammys = grammys.copy()
+```
+
+```{python}
+# print the shape of the combined_site dataframe
+combined_site.shape
+```
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>If done correctly, the `combined_site` dataframe should have a total of `1857` rows and `8` columns</span>
+
+# Part II - It's all about KPIs
+
+![](https://media.giphy.com/media/zoKdmndB8QBR2c0gjy/giphy.gif)
+
+There are certain key performance indicators (KPIs) of interest for The Recording Academy. Let's investigate those a little more.
+
+## Task 6
+
+**A.** Create a new list called `frames` that has the `combined_site`, `rec_academy`, and `grammys` dataframes as entries. e.g. If the 3 dataframes were `df1`, `df2`, and `df3`, then the code would look like:
+
+```python
+frames = [df1, df2, df3]
+```
+
+```{python}
+# create the list of dataframes
+frames = [combined_site, rec_academy, grammys]
+```
+
+**B.** For each frame in the frames list, create a new column `pages_per_session`. This new column is the average number of pageviews per session on a given day. The higher this number the more "stickiness" your website has with your visitors.
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Hint:** Divide the `pageviews` by `sessions`</span>
+
+This can be achieved by using the following template:
+
+```python
+for frame in frames:
+    frame['new_col'] = frame['col_A'] / frame['col_B']
+```
+
+```{python}
+# create the `pages_per_session` column for all 3 dataframes.
+for frame in frames:
+    frame['pages_per_session'] = frame['pageviews'] / frame['sessions']
+```
+
+**C.** Visualize this new metric using a line chart for each site. (You will have 3 separate graphs)
+
+```{python}
+# combined_site graph
+px.line(data_frame=combined_site,
+        x='date',
+        y='pages_per_session',
+        title='Average Pages per Session on the Grammy\'s Combined Website Over Time')
+```
+
+```{python}
+# grammys graph
+px.line(data_frame=grammys,
+        x='date',
+        y='pages_per_session',
+        title='Average Pages per Session on the Grammy\'s Website Over Time')
+```
+
+```{python}
+# rec_academy graph
+px.line(data_frame=rec_academy,
+        x='date',
+        y='pages_per_session',
+        title='Average Pages per Session on the Recording Academy\'s Website Over Time')
+```
+
+**D.** Looking at the 3 charts above, what can you say about the `pages_per_session` when the websites were combined versus after they were split?
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Note:** Any large spikes in the data that do not correspond with the Grammy Awards Ceremony can be attributed to abnormalities in the data collection process and ignored in your analysis.</span>
+
+Before the split, the number of pages per session was around 1-2 pages, but after the split, the pages per session on the grammy's stayed around 2, and the recording academy has around 2-3 pages. 
+
+## Task 7
+
+Bounce rate is another important metric for The Recording Academy. Bounce Rate is a measure of the percentage of visitors who come to the site and *never  interact with the website and leave*. In this task, you will define a function that takes in a dataframe as input and outputs the bounce rate.
+
+**A.** Create a function called `bounce_rate` that:
+
+1. Takes in a `dataframe` as input
+2. adds up all of the values in the `bounced_sessions` column and stores in a variable called `sum_bounced`
+3. adds up all of the values in the `sessions` column and stores it in a variable called `sum_sessions`
+4. returns `100 * sum_bounced / sum_sessions`
+
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Hint:** You will need use the `.sum()` function both in the `sum_bounced` and `sum_sessions` calculations. Don't forget to multiply by `100` so that the answer appears as a percentage instead of a decimal.</span>
+
+```{python}
+def bounce_rate(dataframe):
+    '''
+    Calculates the bounce rate for visitors on the website.
+    input: dataframe with bounced_sessions and sessions columns
+    output: numeric value from bounce rate
+    '''
+    # WRITE YOUR CODE BELOW
+    # Remember, the input for the function is called `dataframe`
+    # So all calculations should reference that variable.
+    sum_bounced = dataframe['bounced_sessions'].sum()
+    sum_sessions = dataframe['sessions'].sum()
+    return 100 * sum_bounced / sum_sessions
+```
+
+**B.** Use the `frames` variable from Task 6 to loop over each website (represented by a dataframe) to calculate the bounce rate. Print the bounce rate for each site.
+
+A template for getting the function to work will look like code below. Remember that this is NOT the print statement, you will still need to add that part.
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Hint:** To get the bounce rate use `bounce_rate(frame)` </span>
+
+```python
+for frame in frames:
+    my_value = my_function(frame)
+```
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Tip:** If you want to reduce the number of decimals shown in an f-string, you can add `:0.2f` just before the end of the curly brackets but after your variable. Example: `print(f'my value is: {my_value:0.2f}')`</span>
+
+```{python}
+# Calculate the Bounce Rate for each site. Use the frames list you created in Task 6.
+# frame_names is used to make the output look nicer
+frame_names = ['The Combined Site', 'The Recording Academy Site', 'The Grammys Site']
+for frame, name in zip(frames, frame_names):
+    b_rate = bounce_rate(frame)
+    print(f'The bounce rate of {name} is {b_rate:0.2f}%')
+```
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>If done correctly, the `combined_site` and `grammys` site will each have bounce rates in the low 40s. The `rec_academy` will have a bounce rate in the low 30s</span>
+
+**C.** Another useful metric is how long on average visitors are staying on the website.
+
+Calculate the `mean` of the `avg_session_duration_secs` for each of the sites.
+Print each one using an f-string.
+
+```{python}
+# Calculate the average of the avg_session_duration_secs. Use the frames list you created in Task 6.
+for frame, name in zip(frames, frame_names):
+    avg_session_duration = frame['avg_session_duration_secs'].mean()
+    print(f'The average session duration on {name} is {avg_session_duration:.2f} sec.')
+```
+
+**D.** What can you say about these two metrics as it relates to each of the websites?
+
+The recording academy has the lowest bounce rate and the longest average session duration. The combined site had the highest bounce rate and the grammys site had the lowest session rate. Based on the values for the bounce rate and average session duration, it looks like splitting the combined site lead the stickier users (users that don't bounce as much) that have longer session times to the recording academy site, and the less sticky users to the grammys site.
+
+# Part III - Demographics
+
+![](https://media.giphy.com/media/GrUhLU9q3nyRG/giphy.gif)
+
+Age demographics are a way to see which audience(s) your content is resonating with the most. This can inform marketing campaigns, ads, and much more.
+
+Let's investigate the demographics for the two websites. This will require reading in two new files and joining them in python.
+
+## Task 8
+
+The `grammys_age_demographics.csv` and `tra_age_demographics.csv` each contain the following information:
+
+- **age_group** - The age group range. e.g. `18-24` are all visitors between the ages of 18 to 24 who come to the site.
+- **pct_visitors** - The percentage of all of the websites visitors that come from that specific age group.
+
+**A.** Read in the `grammys_age_demographics.csv` and `tra_age_demographics.csv` files and store them into dataframes named `age_grammys` and `age_tra`, respectively.
+
+```{python}
+# read in the files
+age_grammys = pd.read_csv('datasets_grammys/grammys_age_demographics.csv')
+age_tra = pd.read_csv('datasets_grammys/tra_age_demographics.csv')
+```
+
+```{python}
+# preview the age_grammys file. the age_tra will look very similar.
+display(age_grammys)
+```
+
+**B.** For each dataframe, create a new column called `website` whose value is the name of the website.
+e.g. the `age_grammys` values for `website` should all be `Grammys` and for the `age_tra` they should be `Recording Academy`.
+
+```{python}
+# create the website column
+age_grammys['website'] = 'Grammys'
+age_tra['website'] = 'Recording Academy'
+```
+
+**C.** use the `pd.concat()` method to join these two datasets together. Store the result into a new variable called `age_df`
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Hint:** Remember that you need to put your dataframe variables inside of a **list** first then pass that as your input of `pd.concat()`</span>
+
+```{python}
+# use pd.concat to join the two datasets
+age_dif = pd.concat([age_grammys, age_tra], join='inner')
+```
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>If done correctly your new dataframe will have `12` rows and `3` columns.</span>
+
+**D.** Create a bar chart of the `age_group` and `pct_visitors`. This chart should have, for each age group, one color for the Recording Academy and a different color for the Grammys.
+
+<span style='background-color: rgba(138, 43, 226, 0.4); padding: 0.2em 0.4em; border-radius: 4px;'>**Hint:** You will need to use the `barmode='group'` option in `px.bar()`. See the code snippet below to guide you.</span>
+
+```python
+# template for visualization
+px.bar(dataframe, x='variable1', y='variable2', color='variable3', barmode='group')
+```
+
+```{python}
+# Create bar chart
+px.bar(age_dif,
+       x='age_group',
+       y='pct_visitors',
+       color='website',
+       barmode='group',
+       title='Demographic Breakdown of Visitors by Percentage to the Split Websites')
+```
+
+**E.** Looking at the chart above, what can you say about how the age demographics differ between the two websites?
+
+The age demographics for both websites is almost identical, but the recording academy has a slightly higher percentage of users 25-34 years old and the grammys has a slightly higher percentage of users 55+ years old.
+
+# Part IV - Recommendation
+![](https://media.giphy.com/media/0Av9l0VIc01y1isrDw/giphy.gif)
+
+```{python}
+# Looking at the overall averages of the frames per session
+for frame, name in zip(frames, frame_names):
+    print(f'{name} pages per session:')
+    print(f"   mean:   {frame['pages_per_session'].mean():.3f}")
+    print(f"   median: {frame['pages_per_session'].median():.3f}")
+```
+
+```{python}
+# Looking at the average number of visitors on the sites
+print('On an awards week:')
+for frame, name in zip(frames, frame_names):
+    print(f'{name} average visitors:')
+    print(f"      mean:   {frame[frame['awards_week'] == 1]['visitors'].mean():,.3f}")
+    print(f"      median: {frame[frame['awards_week'] == 1]['visitors'].median():,.3f}")
+print('----------------------------')
+print('Not on an awards week:')
+for frame, name in zip(frames, frame_names):
+    print(f'{name} average visitors:')
+    print(f"      mean:   {frame[frame['awards_week'] == 0]['visitors'].mean():,.3f}")
+    print(f"      median: {frame[frame['awards_week'] == 0]['visitors'].median():,.3f}")
+```
+
+```{python}
+px.line(data_frame=combined_site,
+        x='date',
+        y='visitors',
+        title='Number of Visitors to the Combined Site Over Time')
+```
+
+```{python}
+px.line(data_frame=grammys,
+        x='date',
+        y='visitors',
+        title='Number of Visitors to the Grammy\'s Separated Site Over Time')
+```
+
+```{python}
+px.line(data_frame=rec_academy,
+        x='date',
+        y='visitors',
+        title='Number of Visitors to the Recording Academy\'s Website Over Time')
+```
+
+## Task 9
+
+Using the work you did in this project, would you recommend that the websites stay separate? Please give a 2-3 paragraph answer using details from the analysis work above explaining why or why not they should stay separate.
+
+Based on the analysis I have done on the website data above, I would recommend the website stays separate. One of the metrics that improved since the split is the pages per view. When looking at the average pages per view, we can see that the combined site has less average pages per view then both of the separated websites. When looking at this average over time, it stays relatively consistent, with no major permanent changes other than when they split.
+
+Another important metric is the average number of visitors to each site, during or outside of the awards week. During the awards week, the average number of visitors to the combined site is higher than the average of visitors to either of the separated sites. Outside of the awards week, the combined site has a similar average number of visitors as the the grammys website and the recording academy has a good number of visitors as well. With the averages of the grammys and recording academy combined, they have more average visitors than the combined site.
+
+# LevelUp
+
+Ray and Harvey are both interested to see how the Grammys.com website compares to that of their main music award competitor, The American Music Awards (AMA). The dashboard below is aggregated information about the performance of The AMA website for the months of April, May, and June of 2023.
+
+Your task is to determine how the Grammys website is performing relative to The AMA website. In particular, you will be looking at the device distribution and total visits over the same time span and leveraging information about Visit Duration, Bounce Rate, and Pages / Visit from your work in the core of this project.
+
+Let's review some of the content from above.
+
+The **Total Visits** column is the total number of visitors on the website during the timespan given.
+The **Device Distribution** is the percentage share of visitors coming from Desktop users (PCs, Macs, etc.) and Mobile Users (iPhone, Android, etc.).
+
+Visitors on the AMA website are spending, on average, 5 mins and 53 seconds on the site and viewing 2.74 pages per visit (aka session). They have a bounce rate of 54.31%
+
+**A.** Load in the two files. The `desktop_users.csv` and `mobile_users.csv` files contain the users coming from desktop users and mobile users respectively.
+
+Store them in variables named `desktop_users` and `mobile_users`
+
+```{python}
+# Load in the data
+desktop_users = pd.read_csv('datasets_grammys/desktop_users.csv')
+mobile_users = pd.read_csv('datasets_grammys/mobile_users.csv')
+```
+
+```{python}
+# preview the desktop_users file
+desktop_users.sample(5)
+```
+
+```{python}
+# preview mobile_users file
+mobile_users.sample(5)
+```
+
+As you can imagine, you will be joining the two datasets together! But before you do that, you will modify the column names so that it's easier to use.
+
+**B.** For each dataframe, change the name of the `visitors` column so that it says which category they come from. For example, the `desktop_users` dataframe should have a column named `desktop_visitors` instead of `visitors`.
+
+Additionally, drop the `segment` column since it is no longer needed.
+
+```{python}
+# change name of the visitors column to indicate which category it comes from
+desktop_users.rename(columns={'visitors': 'desktop_visitors'}, inplace=True)
+mobile_users.rename(columns={'visitors': 'mobile_users'}, inplace=True)
+```
+
+```{python}
+# drop the segment column from each dataframe
+desktop_users.drop('segment', axis=1, inplace=True)
+mobile_users.drop('segment', axis=1, inplace=True)
+```
+
+**C.** Join the two dataframes together in a new variable called `segment_df`.
+
+```{python}
+# join the two dataframes and preview the dataframe
+segment_df = pd.merge(left=desktop_users,
+                      right=mobile_users,
+                      on='date')
+```
+
+**D.** In the next few steps, you will calculate the percentage share of users coming from desktop and mobile on the Grammys website.
+
+Calculate a new column, `total_visitors` that is the addition of `desktop_visitors` and `mobile_visitors`.
+
+```{python}
+# create total_visitors column
+segment_df['total_visitors'] = segment_df['desktop_visitors'] + segment_df['mobile_users']
+```
+
+To calculate the percentage share you will first need to filter the data to dates after (and including) `2023-04-01`. Then calculate the `sum` of desktop visitors and total visitors and divide those values. The percentage share of mobile visitors will be the value needed to get to 100%.
+
+```{python}
+# filter and calculate the percentage share
+filtered_seg_df = segment_df[segment_df['date'] >= '2023-04-01']
+total_visitors = filtered_seg_df['total_visitors'].sum()
+
+perc_desktop_visitors = filtered_seg_df['desktop_visitors'].sum() / total_visitors * 100
+perc_mobile_users =  filtered_seg_df['mobile_users'].sum() / total_visitors * 100
+
+print(f'Total visitors: {total_visitors:,} visitors')
+print(f'desktop users: {perc_desktop_visitors:.2f}%')
+print(f'mobile users: {perc_mobile_users:.2f}%')
+```
+
+**What is the percentage share of desktop and mobile visitors on the Grammys website in the timeframe in question?**
+
+**What is the total number of visitors on the site during this timeframe?**
+
+The total number of users on this site during the timeframe was 1,428,482.
+
+The percentage of desktop users was 31.84%.
+
+The percentage of mobile users was 68.16%.
+
+**E.** How is the Grammys website performing relative to its competitor? What is the Grammys doing well and what KPIs does it need to improve?
+good:
+Bounce rate: grammy's: 40.16%, AMA: 54.31%
+total visits: grammy's: 1.4 million, AMA: 37 k
+device distribution: grammy's d 32, m 68, AMA: d 13, m 87
+bad:
+Avg seconds per session: grammy's: 83 sec., AMA: 353 sec.
+pages per visit: grammy's 2.138, AMA: 2.74
+
+The Grammy's website is doing better than its competitor in bounce rates, total visits and device distribution. The bounce rate for the grammy's site is around 15% less than AMA's site. The Grammy's site also has over 1 million more users than AMA's site. The grammy also has a much more even distribution of devices than AMA. 
+
+The Grammy's site is falling behind AMA in pages per visit and average seconds per session. AMA has 270 sec. more per session on average. AMA also has 0.6 pages per visit over the grammy's site. 
+

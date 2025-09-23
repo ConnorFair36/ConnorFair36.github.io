@@ -1,0 +1,382 @@
+---
+title: "Linear Regression from Scratch"
+date: "2025-7-29"
+description: "An exploration of how linear regression works and some of the fundamentals of machine learning."
+---
+
+# Introduction
+
+Ever since I had first heard of machine learning, I've been fascinated by the idea that there are algorithms that can be used to teach computers how to do things like predict the weather, predict the next word in a sentence or even how to walk! Wanting to learn more about this topic, I decided to take a deep dive into the inner-workings of one of the first and most widely used algorithms: *linear regression*. I chose this algorithm because it is simple, but contains many of the foundational concepts used in more complex algorithms such as XGBoost and Neural Networks.
+
+Before I get to the main topic, let's clarify some key terms to ensure we are on the same page:
+
+- Algorithm: A set of steps to follow to solve a problem or complete a task
+- Machine Learning (ML): The development of algorithms that can learn from data
+- ML model: An "instance" of an algorithm trained on a data set that acts like a function that takes data as input and returns the predicted values
+
+The libraries I will be using for this project are:
+```{python}
+# for building plots
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+# for building the model
+import numpy as np 
+import random
+# for defining the classes
+from abc import ABC, abstractmethod
+# for the train-test data split
+from sklearn.model_selection import train_test_split
+```
+
+Here is the code that was used to generate the testing data if you are interested in checking it out.
+
+```{python}
+#| code-fold: true
+
+def random_values(n: int, a: float, b: float, seed=42) -> tuple[np.ndarray, np.ndarray]:
+	"""Returns n x values between [0, n] and y values between [a, b)."""
+	np.random.seed(seed)
+	return np.linspace(0, n, num=n*4), np.random.rand(n*4) * (b - a) + a
+
+def random_line(n: int, m: float, b: float, mean: float, std: float, seed=42) -> tuple[np.ndarray, np.ndarray]:
+	"""Returns values from 0 to n on the line mx+b but randomly offset from the line by a normal distribution."""
+	np.random.seed(seed)
+	noise = np.random.normal(loc=mean, scale=std, size=n*4)
+	x: np.ndarray = np.linspace(0, n, num=n*4)
+	y: np.ndarray =  (m * x) + b + noise
+	return x, y
+
+def quad_points(n: int, a: float, b: float, c: float) -> tuple[np.ndarray, np.ndarray]:
+	"""Returns n values on the polynomial ax^2 + bx + c."""
+	x: np.ndarray = np.linspace(0, n, num=n*4)
+	y: np.ndarray = (a * x ** 2) + (b * x) + c
+	return x, y
+
+def anscombe_quartet() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+	"""Returns Anscombe's quartet. This dataset was found on wikipedia."""
+	return (np.array([10.  ,  8.  , 13.  ,  9.  , 11.  , 14.  ,  6.  ,  4.  , 12.  ,
+         7.  ,  5.  ], dtype=np.float32),
+       np.array([ 8.04,  6.95,  7.58,  8.81,  8.33,  9.96,  7.24,  4.26, 10.84,
+         4.82,  5.68], dtype=np.float32),
+       np.array([10.  ,  8.  , 13.  ,  9.  , 11.  , 14.  ,  6.  ,  4.  , 12.  ,
+         7.  ,  5.  ], dtype=np.float32),
+       np.array([ 9.14,  8.14,  8.74,  8.77,  9.26,  8.1 ,  6.13,  3.1 ,  9.13,
+         7.26,  4.74], dtype=np.float32),
+       np.array([10.  ,  8.  , 13.  ,  9.  , 11.  , 14.  ,  6.  ,  4.  , 12.  ,
+         7.  ,  5.  ], dtype=np.float32),
+       np.array([ 7.46,  6.77, 12.74,  7.11,  7.81,  8.84,  6.08,  5.39,  8.15,
+         6.42,  5.73], dtype=np.float32),
+       np.array([ 8.  ,  8.  ,  8.  ,  8.  ,  8.  ,  8.  ,  8.  , 19.  ,  8.  ,
+         8.  ,  8.  ], dtype=np.float32),
+       np.array([ 6.58,  5.76,  7.71,  8.84,  8.47,  7.04,  5.25, 12.5 ,  5.56,
+         7.91,  6.89], dtype=np.float32))
+```
+
+## How to Build a Model
+
+Now that we know what a model is, we can build one following four steps: collecting data, choosing the model structure, choosing the loss function and optimizing the model. 
+
+The first (and most important) step is collecting the data that you want a model to use. This step involves understanding the problem you are trying to solve or gain insight on, then finding the most relevent data for that purpose. It is also imoprtant to understand the data types and structure of the data. For example, if you need data from a bunch of youtube comments, you would be collecting the comment (string), the username (string), date uploaded (date time) and likes (int). 
+
+The next step is to choose the model structure for your problem. The model structure referes to the algorithm being used to solve your problem. Your model choice will be heavily influenced by the data you have avalable, and what kind of problem you want to solve. Some examples of problems are regression problems where you want to predict a continuous value or there are classification problems where you predict which category an input goes into.
+
+Once you have a model structure and data to work with, you need a loss fuction so that you can determine how far away from a solution you are and use this function to get closser. The loss function is chosen based on the type of model chosen and problem to solve. For example, in a regression problem, you may want to use a mean squared error.
+
+The last step is to optomize the model by running it through the data, calculating the loss based on the models prediction, then adjust the parameters of the model to decrease the loss. This step is run multiple times until either the model performs well enough or the reduction in error is too small.
+
+Once the model is built, it is important to measure it's performance on data it hasn't seen yet to ensure the model is working well. There are many evaluation metrics that can be used for this that ephasize certain characteristics of the performance. Some metrics for regression include root mean squared error and absolute value error. 
+
+## Data for this project
+
+For this project I will mostly be using synthetic data so that I can show off the strengths and limitations of this algorithm on data that is distributed in different ways.
+
+::: {.panel-tabset}
+
+### Line Data
+
+This data generally follows the shape of the line, which makes it a good test to ensure the model is working correctly.
+
+```{python}
+X, Y = random_line(20, 3, 5, 0, 3)
+plt = px.scatter(x=X, y=Y)
+plt.show()
+```
+
+### Random Data
+
+This data is completly randomly generated with no patterns to show some of the limitations of the model. There shouldn't be a good fitting line for this data.
+
+```{python}
+X, Y = random_values(10, 3, 5)
+plt = px.scatter(x=X, y=Y)
+plt.show()
+```
+
+### Quadratic Data
+
+This data is non-linearly dependent to show another limitation of this model.
+
+```{python}
+X, Y = quad_points(10, 3, 5, 3)
+plt = px.scatter(x=X, y=Y)
+plt.show()
+```
+
+### Anscombe’s Quartet
+
+This data will later be used to show why visualizing data is so important and how it it has some interestiong effects on the model.
+
+```{python}
+x1, y1, x2, y2, x3, y3, x4, y4 = anscombe_quartet()
+
+fig = make_subplots(rows=2, cols=2, start_cell="top-left")
+
+fig.add_trace(go.Scatter(x=x1, y=y1, mode='markers'), row=1, col=1)
+fig.add_trace(go.Scatter(x=x2, y=y2, mode='markers'), row=2, col=1)
+fig.add_trace(go.Scatter(x=x3, y=y3, mode='markers'), row=1, col=2)
+fig.add_trace(go.Scatter(x=x4, y=y4, mode='markers'), row=2, col=2)
+
+fig.show()
+```
+
+:::
+
+# Linear Regression
+
+## Model Structure
+
+In the datasets I will be using, each y (target) values is determined by only one x (feature) value, so for the type of linear regression model I will build is **simple linear regression** because it takes 1 input and returns 1 output. The model is build off this simple equation: $y=mx+b$ where $y$, $m$, $x$ and $b$ are all scalars.
+
+ADD GRAPH OF LINE FITTING FUNCTION HERE
+
+In the real world, most systems that you want to predict will have multiple input values that contribute to the output value. The model you would want to use instead is **multiple linear regression** which can take multiple inputs and returns 1 output value. It is calculated using: $y=m^{T}x+b$ where $y$ and $b$ are scalars and $m$ and $x$ are vectors of length $n$.
+
+ADD LaTeX VISUALIZATION OF THE MULTI-LINEAR REGRESSION MODEL EVALUATING INPUTS HERE
+
+ADD GRAPH OF LINE FITTING FUNCTION HERE
+
+I choose simple linear regression over multiple for this project to keep the code for the model easier to understand and to make the graphs much simpler to read.
+
+## Loss Functions
+
+When the model is first put together, it needs to have values for the slope $m$ and intercept $b$ to make predictions off the data. These values are usually chosen at random because the model doesn't know anything about the data. To measure how far off the model is from we need to use an **error function**, which is used to measure how far off your model's prediction is from the actual value. There are a couple of error functions that can be used for this that are displayed below with their strengths and weaknesses. Once we have picked our error function, we need a way to reduce this error to get a more accurate model. The good news it that there is a tool from calculus that can do just that: **Gradient Descent**. 
+
+The gradient of a function is a vector that points towards the direction of most growth from any point on the graph. By going the opposite way, we can instead go in the direction of greatest shrinking in value. We can apply this to the error function to find what adjustment of $m$ and $b$ will reduce the error the most.
+
+ADD VISUALIZATION FOR GRADIENT DESCENT
+
+::: {.callout-note}
+In the formulas below, $y_{i}$ is the actual value and $y'_{i}$ is the predicted value where $mx_{i}+b=y'_{i}$
+:::
+
+### Mean Squared Error (MSE)
+- $MSE=\frac{1}{n}\sum_{i=0}^{n}(y_{i}-y_{i}')^2$
+- This error function squares the error, which helps the model converge to the optimal value faster, but it can also be more heavily influenced by outliers
+- This is the most common error function for linear regression
+- Gradients:
+    - $\frac{\partial E}{\partial m}=-\frac{2}{n}\sum_{i=0}^{n}x_{i}(y_{i}-y_{i}')$
+    - $\frac{\partial E}{\partial b}=-\frac{2}{n}\sum_{i=0}^{n}(y_{i}-y_{i}')$
+
+### Absolute value error (AVE)
+- $AVE=\frac{1}{n}\sum_{i=0}^{n}|y_{i}-y_{i}'|$
+- This error function takes the absolute value of the error for each point, which gives each value proportionally equal influence on the parameters making it less effected by large outliers
+- It takes longer for this error function to converge on the optimal values
+- This error function is much less popular
+- Gradients:
+    - $\frac{\partial E}{\partial m}=\frac{1}{n}\sum_{i=0}^{n}\frac{x_{i}(y_{i}-y_{i}')}{|y_{i}-y_{i}'|}$
+    - $\frac{\partial E}{\partial b}=\frac{1}{n}\sum_{i=0}^{n}\frac{y_{i}-y_{i}'}{|y_{i}-y_{i}'|}$
+
+::: {.callout-note}
+The gradients for AVE can be zero. I will need to take this into account when implementing these gradients into code.
+:::
+
+## Training
+
+Now that we have a way to adjust model weights and we have some data that we want to use, we need to use this data to train our model. As we learned about in the last section on loss functions, to calculate the gradients that are used to adjust the slope and intercept, we need the model's prediction and the actual value for all input values. The actual value can be thought of as the correct label for a particular input. Training models on labeled datasets is called **supervised learning**. This also means that our data must have a label to be used in training or testing.
+
+Once we have our labled data, it is common practice to split out data into training and testing portions, where the model is trained on the training data, then evaluated on the testing data. This is done so that the model can be tested on data it hasn't seen yet to evaluate performance. To get out training data, we use a train-test split where 80% of the data is used for training and 20% is used for testing. The values that are split up are usually chosen at random.
+
+::: {.callout-note}
+I will be using the scikit-learn implementation for the test-train split because the details of how this works are irrelevant to the rest of the project.
+:::
+
+The test-train split allows for the detection of **overfitting** and **underfitting** issues with the model. **Overfitting** is where the model learns to memorize the anwsers in the training data instead of the patterns in the data which leads to it struggling with the testing data dispite doing very well on the training data. **Underfitting** is where the model isn't able to learn the data very well and has poor performanceon both the training and test data.
+
+Using the training data, we can run it through our model as many times as we need to, so that the model can learn from the dataset. Each full pass of all the training data through the model is called an *epoch*. The model stops after either the error isn't improving enough, or a max number of epochs have been reached if the model isn't fitting well.
+
+## Evaluation
+
+We now know how to train our model, but how do we know if it is effective? This is where evaluation methods come in as a way to determine if a model is working well or to determine if one model is better than another.
+
+### Root Mean Squared Error
+
+### Absolute Value Error 
+
+### R^2^
+
+## Putting it Together
+
+Using what I have covered so far we can put the model structure, loss function and model training into a single class for building an actual model
+
+```{python}
+# defines the template for error functions and their partal derivitives for use in linear regression
+class GradientDescent(ABC):
+    @abstractmethod
+    def error(self, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        """Calculates the error of the model by comparing it's prediction to the actual values."""
+        pass
+    @abstractmethod
+    def adjust_m(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        """Adjusts the slope (m) of the model using the partal derivative of the error function with respect to m."""
+        pass
+    @abstractmethod
+    def adjust_b(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        """Adjusts the intercept (b) of the model using the partal derivative of the error function with respect to b."""
+        pass
+
+class SimpleLinearRegression():
+    def __init__(self, loss_fun: GradientDescent):
+        """Initalize the slope and intercept to random values and sets the optimize function for the model."""
+        self.m, self.b = np.random.rand(2)
+        self.loss_fun = loss_fun
+        # a dictonary for storing the metrics from the last time the model was fit to data
+        self.fit_metrics = dict()
+
+    def predict(self, x: float | np.ndarray) -> float | np.ndarray:
+        """Returns the function applied to the input x."""
+        return (self.m * x) + self.b
+
+    def _reset_metrics(self) -> None:
+        """Resets the metrics collected from the last data fit."""
+        self.fit_metrics = {"total epoch": -1, "m b error": []}
+
+    def fit(self, x: np.ndarray, y: np.ndarray, learn_rate: float = 0.005, error_change: float = 1.0, max_epoch: int = 500) -> None:
+        """Adjusts the model's slope and intercept to fit the data."""
+        self._reset_metrics()
+        self.fit_metrics["total epoch"] = max_epoch
+        # get the inital error
+        current_error = self.loss_fun.error(self.predict(x), y)
+        self.fit_metrics["m b error"].append([self.m, self.b, current_error])
+        while max_epoch:
+            # make a prediction based on the current m and b
+            y_pred = self.predict(x)
+            # using the predicted values, adjust the m and b parameters to give better predictions
+            self.grad_adjust(x, y_pred, y, learn_rate)
+            # leave the loop if the improvement in error is less that the error change threshold
+            new_error = self.loss_fun.error(self.predict(x), y)
+            if abs(current_error - new_error) < error_change:
+                break
+            current_error = new_error
+            self.fit_metrics["m b error"].append([self.m, self.b, current_error])
+            max_epoch -= 1
+        self.fit_metrics["total epoch"] -= max_epoch
+    
+    def grad_adjust(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray, learn_rate: float) -> None:
+        """Adjusts the m and b of the model using gradient decent."""
+        self.m -= learn_rate * self.loss_fun.adjust_m(x, y_pred, y_truth)
+        self.b -= learn_rate * self.loss_fun.adjust_b(x, y_pred, y_truth)
+
+```
+
+Now that I have defined the structure of the linear regression model I will be using, I need to define the error functions I will be using.
+
+```{python}
+class MeanSquaredError(GradientDescent):
+    def error(self, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (1/len(y_truth)) * np.sum((y_truth - y_pred)**2)
+    
+    def adjust_m(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (-2/len(y_truth)) * np.sum(x * (y_truth - y_pred))
+    
+    def adjust_b(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (-2 / len(y_truth)) * np.sum((y_truth - y_pred))
+```
+
+For the AVE, I would like to avoid dividing by zero in the gradients. If we take a look at a simplified version of the error function: $f(x)=|x|$, then it's derivative is $\frac{d}{dx}f(x)=\frac{x}{|x|}$. An interesting property of this function is that the only values it can output are 1 when $x > 0$ and -1 when $x < 0$ however, when x = 0, the function is undefined. This may seem like a dead-end, but if x is zero, then there is no error, and if there is no error, the function shouldn't adjust the model parameter. We can do this by setting the output to zero when x is zero, thus allowing us to sidestep the division by zero.
+
+```{python}
+class AbsoluteValueError(GradientDescent):
+    def error(self, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (1/len(y_truth)) * np.sum(np.abs(y_truth - y_pred))
+
+    def __pos_or_neg(self, x: np.ndarray) -> np.ndarray:
+        """Changes x to x/|x| if x != 0 else 0 and returns a new array."""
+        x = x.copy()
+        pos = x > 0
+        neg = x < 0
+        x[pos] = 1
+        x[neg] = -1
+        return x
+    
+    def adjust_m(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (-1/len(y_truth)) * np.sum(x * self.__pos_or_neg(y_truth - y_pred))
+    
+    def adjust_b(self, x: np.ndarray, y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+        return (-1 / len(y_truth)) * np.sum(self.__pos_or_neg(y_truth - y_pred))
+```
+
+The evaluation functions
+
+```{python}
+def RootMSE(y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+    return 0.0
+def AVE(y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+    return 0.0
+def r_squared(y_pred: np.ndarray, y_truth: np.ndarray) -> float:
+    return 0.0
+```
+
+To ensure the model runs, let's try it out on some of our training data for both optimization functions.
+
+```{python}
+X, Y = random_line(20, 3, 5, 0, 3)
+model = SimpleLinearRegression(MeanSquaredError())
+plt = px.scatter(x=X, y=Y)
+plt.add_scatter(x=X, y=model.predict(X), mode='lines', name='before training')
+model.fit(X, Y)
+plt.add_scatter(x=X, y=model.predict(X), mode='lines', name='after training')
+plt.show()
+print(f"Total Epochs: {model.fit_metrics["total epoch"]}")
+```
+
+```{python}
+X, Y = random_line(20, 3, 5, 0, 3)
+model = SimpleLinearRegression(AbsoluteValueError())
+plt = px.scatter(x=X, y=Y)
+plt.add_scatter(x=X, y=model.predict(X), mode='lines', name='before training')
+model.fit(X, Y, max_epoch=2500, learn_rate = 0.01, error_change = 0.05)
+plt.add_scatter(x=X, y=model.predict(X), mode='lines', name='after training')
+plt.show()
+print(f"Total Epochs: {model.fit_metrics["total epoch"]}")
+```
+
+## Limitations
+
+- doesn't work well for non-linear relationships
+- can be affected by large outliers
+- Anscome's quartet
+
+## Conclusions
+
+things I learned:
+- Good class structure goes a long way
+- 
+
+takaways:
+- Impotance of understanding data
+ - not just relying on metrics
+- Using the right evaluation based on the problem
+- 
+
+next steps:
+- 
+
+# Sources
+
+- [video where I got the idea for this from](https://www.youtube.com/watch?v=VmbA0pi2cRQ&t=1127s)
+- [first chapter of this book](https://www.thelmbook.com)
+- [Evaluating regression models](https://machinelearningmastery.com/regression-metrics-for-machine-learning/)
+- [Multilinear Regression source](https://www.geeksforgeeks.org/machine-learning/ml-multiple-linear-regression-using-python/)
+- [Anscome's quartet source](https://www.research.autodesk.com/publications/same-stats-different-graphs/)
+- [R^2^ source](https://www.datacamp.com/tutorial/r-squared)
