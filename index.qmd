@@ -5,6 +5,10 @@ listing:
     contents: "data-analytics/*/index.qmd"
     fields: [image, date, title, description]
     type: grid
+  - id: mach-learn
+    contents: "mach-learn/*/index.qmd"
+    fields: [image, date, title, description]
+    type: grid
 image: Fair.png
 about:
   id: the-about
