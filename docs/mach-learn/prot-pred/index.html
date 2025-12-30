@@ -281,22 +281,36 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="feature-extraction">Feature Extraction</h2>
 <p>All of the machine learning models we planned on using couldn’t take raw text as input. Our first idea was to one-hot encode the protein sequences, but our models also couldn’t handle variable length inputs. Our final solution was to use biopython’s ProteinAnalysis class which could take our raw amino acid sequences and extract potentially useful features from them. There were some amino acids in our dataset that biopython didn’t recognize, so we filtered those out of the sequences. Below is our list of features that we used.</p>
 <ul>
-<li><strong>Amino acid composition (20 features)</strong></li>
+<li><strong>Amino acid composition (20 features)</strong>
+<ul>
 <li>Frequency of each of the 20 standard amino acids (A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y)</li>
 <li>Each feature represents the percentage of that amino acid in the protein sequence</li>
 <li>Features sum to 100% for each protein sequence</li>
-<li><strong>Length of protein</strong></li>
+</ul></li>
+<li><strong>Length of protein</strong>
+<ul>
 <li>Length of protein sequences</li>
-<li><strong>Molecular weight of the protein</strong></li>
+</ul></li>
+<li><strong>Molecular weight of the protein</strong>
+<ul>
 <li>The molecular weight of the protein</li>
-<li><strong>Gravy</strong></li>
+</ul></li>
+<li><strong>Gravy</strong>
+<ul>
 <li>Describes the hydrophobicity of the protein: positive repels water and negative attracts water</li>
-<li><strong>Helix, Turn &amp; Sheet</strong></li>
+</ul></li>
+<li><strong>Helix, Turn &amp; Sheet</strong>
+<ul>
 <li>The fraction of amino acids predicted to be in helix, turn, or sheet conformations.</li>
-<li><strong>Positive-Negative ratio</strong></li>
+</ul></li>
+<li><strong>Positive-Negative ratio</strong>
+<ul>
 <li>The positive to negative amino acid ratio in the protein</li>
-<li><strong>Amino acid group counts</strong></li>
+</ul></li>
+<li><strong>Amino acid group counts</strong>
+<ul>
 <li>The number of proteins that are non-polar, polar(no charge), polar(positive), polar(negative)</li>
+</ul></li>
 </ul>
 </section>
 <section id="models" class="level2">
@@ -678,15 +692,15 @@ Note
 <path fill="#2b2f33" stroke="#6c757d" stroke-dasharray="5,2" d="M178.37,-8C178.37,-8 634.71,-8 634.71,-8 640.71,-8 646.71,-14 646.71,-20 646.71,-20 646.71,-73 646.71,-73 646.71,-79 640.71,-85 634.71,-85 634.71,-85 178.37,-85 178.37,-85 172.37,-85 166.37,-79 166.37,-73 166.37,-73 166.37,-20 166.37,-20 166.37,-14 172.37,-8 178.37,-8"></path>
 <text text-anchor="middle" x="406.54" y="-68.4" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#f8f9fa">Gradient Boosting 2</text>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_knn</title>
-<path fill="#2b2f33" stroke="#6c757d" stroke-dasharray="5,2" d="M201.91,-178C201.91,-178 625.45,-178 625.45,-178 631.45,-178 637.45,-184 637.45,-190 637.45,-190 637.45,-243 637.45,-243 637.45,-249 631.45,-255 625.45,-255 625.45,-255 201.91,-255 201.91,-255 195.91,-255 189.91,-249 189.91,-243 189.91,-243 189.91,-190 189.91,-190 189.91,-184 195.91,-178 201.91,-178"></path>
-<text text-anchor="middle" x="413.68" y="-238.4" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#f8f9fa">K-Nearest Neighbors</text>
-</g>
 <g id="clust1" class="cluster">
 <title>cluster_mlp</title>
 <path fill="#2b2f33" stroke="#6c757d" stroke-dasharray="5,2" d="M20,-263C20,-263 619.49,-263 619.49,-263 625.49,-263 631.49,-269 631.49,-275 631.49,-275 631.49,-340 631.49,-340 631.49,-346 625.49,-352 619.49,-352 619.49,-352 20,-352 20,-352 14,-352 8,-346 8,-340 8,-340 8,-275 8,-275 8,-269 14,-263 20,-263"></path>
 <text text-anchor="middle" x="319.75" y="-335.4" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#f8f9fa">Multi-Layer Perceptron</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_knn</title>
+<path fill="#2b2f33" stroke="#6c757d" stroke-dasharray="5,2" d="M201.91,-178C201.91,-178 625.45,-178 625.45,-178 631.45,-178 637.45,-184 637.45,-190 637.45,-190 637.45,-243 637.45,-243 637.45,-249 631.45,-255 625.45,-255 625.45,-255 201.91,-255 201.91,-255 195.91,-255 189.91,-249 189.91,-243 189.91,-243 189.91,-190 189.91,-190 189.91,-184 195.91,-178 201.91,-178"></path>
+<text text-anchor="middle" x="413.68" y="-238.4" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#f8f9fa">K-Nearest Neighbors</text>
 </g>
 <!-- VotingClassifier -->
 <g id="node1" class="node">
@@ -884,7 +898,7 @@ Note
 <section id="confusion-matrices" class="level2">
 <h2 class="anchored" data-anchor-id="confusion-matrices">Confusion Matrices</h2>
 <p>The confusion matrix for the baseline</p>
-<div id="d0fe5d6c" class="cell" data-execution_count="1">
+<div id="adfcd0fa" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -894,7 +908,7 @@ Note
 </div>
 </div>
 <p>The confusion matrix for our best result</p>
-<div id="ef3a9730" class="cell" data-execution_count="2">
+<div id="4d3d021f" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

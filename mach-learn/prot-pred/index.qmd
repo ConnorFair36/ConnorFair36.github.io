@@ -51,21 +51,21 @@ The dataset was also very unbalanced with most proteins belonging to the nonDRNA
 All of the machine learning models we planned on using couldn't take raw text as input. Our first idea was to one-hot encode the protein sequences, but our models also couldn't handle variable length inputs. Our final solution was to use biopython's ProteinAnalysis class which could take our raw amino acid sequences and extract potentially useful features from them. There were some amino acids in our dataset that biopython didn't recognize, so we filtered those out of the sequences. Below is our list of features that we used.
 
 - **Amino acid composition (20 features)**
- - Frequency of each of the 20 standard amino acids (A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y)
- - Each feature represents the percentage of that amino acid in the protein sequence
- - Features sum to 100% for each protein sequence
+   - Frequency of each of the 20 standard amino acids (A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y)
+   - Each feature represents the percentage of that amino acid in the protein sequence
+   - Features sum to 100% for each protein sequence
 - **Length of protein**
- - Length of protein sequences
+   - Length of protein sequences
 - **Molecular weight of the protein**
- - The molecular weight of the protein
+   - The molecular weight of the protein
 - **Gravy**
- - Describes the hydrophobicity of the protein: positive repels water and negative attracts water
+   - Describes the hydrophobicity of the protein: positive repels water and negative attracts water
 - **Helix, Turn & Sheet**
- - The fraction of amino acids predicted to be in helix, turn, or sheet conformations.
+   - The fraction of amino acids predicted to be in helix, turn, or sheet conformations.
 - **Positive-Negative ratio**
- - The positive to negative amino acid ratio in the protein
+   - The positive to negative amino acid ratio in the protein
 - **Amino acid group counts**
- - The number of proteins that are non-polar, polar(no charge), polar(positive), polar(negative)
+   - The number of proteins that are non-polar, polar(no charge), polar(positive), polar(negative)
 
 ## Models
 
