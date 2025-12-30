@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/data-analytics/Grammy_Analytics/index.html",
+      "/mach-learn/prot-pred/index.html",
       "/mach-learn/autoencoder-cluster-analysis/index.html"
     ]
   }

@@ -9,6 +9,7 @@ listing:
     contents: "mach-learn/*/index.qmd"
     fields: [image, date, title, description]
     type: grid
+    sort: "date desc"
 image: Fair.png
 about:
   id: the-about
@@ -24,7 +25,7 @@ about:
 
 # About Me!
 
-Hey, I'm Connor! I'm a senior computer science student at VCU, with minors in math and data science. I enjoy learning about and applying machine learning models to interesting problems and experinenting with those models to see how far I can push them :). 
+Hey, I'm Connor! I'm a senior computer science student at VCU, with minors in math and data science. I enjoy learning about machine learning models and applying data science to solve difficult problems and discover insights in existing data. 
 
 In my free time, I enjoy playing bass, making chainmaile and taking my dog for walks.
 
@@ -39,4 +40,7 @@ My colection of complete projects for school or for fun
 :::{#data-analytics}
 :::
 
+## Machine Learning
 
+:::{#mach-learn}
+:::
