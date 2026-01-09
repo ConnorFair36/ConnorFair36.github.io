@@ -25,22 +25,20 @@ about:
 
 # About Me!
 
-Hey, I'm Connor! I'm a senior computer science student at VCU, with minors in math and data science. I enjoy learning about machine learning models and applying data science to solve difficult problems and discover insights in existing data. 
+Hey, I'm Connor! I'm a senior computer science student at VCU, with minors in math and data science. I enjoy investigating the inner workings of machine learning models and applying data science to solve difficult problems and discover insights in data. 
 
-In my free time, I enjoy playing bass, making chainmaile and taking my dog for walks.
+Outside of school, I play bass in a band weekly and go to local tech meetups to meet other tech enthusiasts. In my downtime, I enjoy relaxing with my dog on walks.
 
 :::
 
 # Portfolio Projects
 
-My colection of complete projects for school or for fun
+## Machine Learning
+
+:::{#mach-learn}
+:::
 
 ## Data Analytics
 
 :::{#data-analytics}
-:::
-
-## Machine Learning
-
-:::{#mach-learn}
 :::
