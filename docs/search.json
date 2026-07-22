@@ -207,21 +207,21 @@
     "href": "index.html",
     "title": "Connor Fair",
     "section": "",
-    "text": "Hey, I’m Connor! I’m a senior computer science student at VCU, with minors in math and data science. I enjoy investigating the inner workings of machine learning models and applying data science to solve difficult problems and discover insights in data.\nOutside of school, I play bass in a band weekly and go to local tech meetups to meet other tech enthusiasts. In my downtime, I enjoy relaxing with my dog on walks."
+    "text": "I’m Connor, a data enthusiast who loves exploring datasets, building machine learning models and solving novel problems. I enjoy applying my skills to a variety of domains, from forecasting weather patterns to predicting how proteins interact, if there’s data involved, there are always patterns to be discovered. I hold a Computer Science degree from VCU with minors in Math and Data Science."
   },
   {
     "objectID": "index.html#machine-learning",
     "href": "index.html#machine-learning",
     "title": "Connor Fair",
     "section": "Machine Learning",
-    "text": "Machine Learning\n\n\n\n\n\n\n\n\n\n\nPrecipitation Prediction\n\n\nPredicting precipitation over the continental United States by combining convolutions into recurrent neural networks for spatiotemporal predictions\n\n\n\nMay 16, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProtein Interaction Prediction\n\n\nUsing an ensemble of models to predict the interactions of proteins with DNA and RNA\n\n\n\nDec 15, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnalysing Autoencoder Latent Spaces with Clustering\n\n\nExploring the connection between the latent space of an autoencoder and an image classification\n\n\n\nSep 24, 2025\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Machine Learning\n\n\n\n\n\n\n\n\n\n\nPrecipitation Prediction\n\n\n\n\n\nPredicting precipitation over the continental United States by combining convolutions into recurrent neural networks for spatiotemporal predictions\n\n\n\n\n\nMay 16, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nProtein Interaction Prediction\n\n\n\n\n\nUsing an ensemble of models to predict the interactions of proteins with DNA and RNA\n\n\n\n\n\nDec 15, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nAnalysing Autoencoder Latent Spaces with Clustering\n\n\n\n\n\nExploring the connection between the latent space of an autoencoder and an image classification\n\n\n\n\n\nSep 24, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#data-analytics",
     "href": "index.html#data-analytics",
     "title": "Connor Fair",
     "section": "Data Analytics",
-    "text": "Data Analytics\n\n\n\n\n\n\n\n\n\n\nGrammys Project\n\n\nA breakdown on the effectiveness of the recording academy’s desision to split its website\n\n\n\nOct 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Data Analytics\n\n\n\n\n\n\n\n\n\n\nGrammys Project\n\n\n\n\n\nA breakdown on the effectiveness of the recording academy’s desision to split its website\n\n\n\n\n\nOct 1, 2024\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "mach-learn/weather-pred/index.html",

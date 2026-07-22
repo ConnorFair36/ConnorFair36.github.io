@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
     const options = {
       valueNames: ['listing-image','listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -107,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
     const options = {
       valueNames: ['listing-image','listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -241,8 +241,7 @@ window.Quarto = {
   <div class="about-contents"><div id="the-about">
 <section id="about-me" class="level1">
 <h1>About Me!</h1>
-<p>Hey, I’m Connor! I’m a senior computer science student at VCU, with minors in math and data science. I enjoy investigating the inner workings of machine learning models and applying data science to solve difficult problems and discover insights in data.</p>
-<p>Outside of school, I play bass in a band weekly and go to local tech meetups to meet other tech enthusiasts. In my downtime, I enjoy relaxing with my dog on walks.</p>
+<p>I’m Connor, a data enthusiast who loves exploring datasets, building machine learning models and solving novel problems. I enjoy applying my skills to a variety of domains, from forecasting weather patterns to predicting how proteins interact, if there’s data involved, there are always patterns to be discovered. I hold a Computer Science degree from VCU with minors in Math and Data Science.</p>
 </section>
 </div></div>
 </div>
@@ -251,73 +250,82 @@ window.Quarto = {
 <h1>Portfolio Projects</h1>
 <section id="machine-learning" class="level2">
 <h2 data-anchor-id="machine-learning">Machine Learning</h2>
-<div id="listing-mach-learn" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1778904000000" data-listing-file-modified-sort="1780760159700" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="2000">
-<a href="./mach-learn/weather-pred/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./mach-learn/weather-pred/new_precipitation.gif" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Precipitation Prediction
-</h5>
-<div class="card-text listing-description">
-Predicting precipitation over the continental United States by combining convolutions into recurrent neural networks for spatiotemporal predictions
+<div id="listing-mach-learn" class="quarto-listing quarto-listing-container-default">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1778904000000" data-listing-file-modified-sort="1784731366335" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="2000">
+<div class="thumbnail">
+<p><a href="./mach-learn/weather-pred/index.html" class="no-external"></a></p><a href="./mach-learn/weather-pred/index.html" class="no-external">
+<p><img loading="lazy" src="./mach-learn/weather-pred/cropped_new_precipitation.gif" class="thumbnail-image" style="height: 500;"></p>
+</a><p><a href="./mach-learn/weather-pred/index.html" class="no-external"></a></p>
 </div>
-<div class="card-attribution card-text-small end">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./mach-learn/weather-pred/index.html" class="no-external">Precipitation Prediction</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./mach-learn/weather-pred/index.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./mach-learn/weather-pred/index.html" class="no-external">Predicting precipitation over the continental United States by combining convolutions into recurrent neural networks for spatiotemporal predictions</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./mach-learn/weather-pred/index.html" class="no-external">
 <div class="listing-date">
 May 16, 2026
 </div>
-</div>
-</div>
-</div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-date-sort="1765774800000" data-listing-file-modified-sort="1767127683054" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3900">
-<a href="./mach-learn/prot-pred/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./mach-learn/prot-pred/graphviz-2.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Protein Interaction Prediction
-</h5>
-<div class="card-text listing-description">
-Using an ensemble of models to predict the interactions of proteins with DNA and RNA
 </div>
-<div class="card-attribution card-text-small end">
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1765774800000" data-listing-file-modified-sort="1767127683054" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3900">
+<div class="thumbnail">
+<p><a href="./mach-learn/prot-pred/index.html" class="no-external"></a></p><a href="./mach-learn/prot-pred/index.html" class="no-external">
+<p><img loading="lazy" src="./mach-learn/prot-pred/graphviz-2.png" class="thumbnail-image" style="height: 500;"></p>
+</a><p><a href="./mach-learn/prot-pred/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./mach-learn/prot-pred/index.html" class="no-external">Protein Interaction Prediction</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./mach-learn/prot-pred/index.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./mach-learn/prot-pred/index.html" class="no-external">Using an ensemble of models to predict the interactions of proteins with DNA and RNA</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./mach-learn/prot-pred/index.html" class="no-external">
 <div class="listing-date">
 Dec 15, 2025
 </div>
-</div>
-</div>
-</div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-listing-date-sort="1758686400000" data-listing-file-modified-sort="1758691258416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2049">
-<a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./mach-learn/autoencoder-cluster-analysis/latentspace.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Analysing Autoencoder Latent Spaces with Clustering
-</h5>
-<div class="card-text listing-description">
-Exploring the connection between the latent space of an autoencoder and an image classification
 </div>
-<div class="card-attribution card-text-small end">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1758686400000" data-listing-file-modified-sort="1758691258416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2049">
+<div class="thumbnail">
+<p><a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external"></a></p><a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external">
+<p><img loading="lazy" src="./mach-learn/autoencoder-cluster-analysis/latentspace.png" class="thumbnail-image" style="height: 500;"></p>
+</a><p><a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external">Analysing Autoencoder Latent Spaces with Clustering</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external">Exploring the connection between the latent space of an autoencoder and an image classification</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./mach-learn/autoencoder-cluster-analysis/index.html" class="no-external">
 <div class="listing-date">
 Sep 24, 2025
 </div>
-</div>
-</div>
-</div>
 </a>
+</div>
 </div>
 </div>
 <div class="listing-no-matching d-none">
@@ -327,29 +335,32 @@ No matching items
 </section>
 <section id="data-analytics" class="level2">
 <h2 data-anchor-id="data-analytics">Data Analytics</h2>
-<div id="listing-data-analytics" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1727755200000" data-listing-file-modified-sort="1758585295208" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3562">
-<a href="./data-analytics/Grammy_Analytics/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./data-analytics/Grammy_Analytics/grammy_graph.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Grammys Project
-</h5>
-<div class="card-text listing-description">
-A breakdown on the effectiveness of the recording academy’s desision to split its website
+<div id="listing-data-analytics" class="quarto-listing quarto-listing-container-default">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1727755200000" data-listing-file-modified-sort="1758585295208" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3562">
+<div class="thumbnail">
+<p><a href="./data-analytics/Grammy_Analytics/index.html" class="no-external"></a></p><a href="./data-analytics/Grammy_Analytics/index.html" class="no-external">
+<p><img loading="lazy" src="./data-analytics/Grammy_Analytics/grammy_graph.png" class="thumbnail-image" style="height: 500;"></p>
+</a><p><a href="./data-analytics/Grammy_Analytics/index.html" class="no-external"></a></p>
 </div>
-<div class="card-attribution card-text-small end">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./data-analytics/Grammy_Analytics/index.html" class="no-external">Grammys Project</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./data-analytics/Grammy_Analytics/index.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="./data-analytics/Grammy_Analytics/index.html" class="no-external">A breakdown on the effectiveness of the recording academy’s desision to split its website</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./data-analytics/Grammy_Analytics/index.html" class="no-external">
 <div class="listing-date">
 Oct 1, 2024
 </div>
-</div>
-</div>
-</div>
 </a>
+</div>
 </div>
 </div>
 <div class="listing-no-matching d-none">

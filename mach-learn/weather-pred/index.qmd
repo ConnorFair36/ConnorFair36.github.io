@@ -2,7 +2,7 @@
 title: "Precipitation Prediction"
 author: "Connor Fair"
 date: "2026-5-16"
-image: "new_precipitation.gif"
+image: "cropped_new_precipitation.gif"
 description: "Predicting precipitation over the continental United States by combining convolutions into recurrent neural networks for spatiotemporal predictions"
 execute:
  echo: false
